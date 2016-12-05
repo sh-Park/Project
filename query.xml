@@ -1,0 +1,72 @@
+/*
+MYSQL
+
+테이블 정의
+TB_BASKETBALL_MATCH 농구 경기 데이터 테이블
+TB_BOWLING_MATCH    볼링 경기 데이터 테이블
+TB_BASEBALL_MATCH   야구 경기 데이터 테이블
+*/
+
+
+-- 회원 가입 테이블
+CREATE TABLE TB_JOIN(
+  -> id VARCHAR(50) primary key,
+  -> password VARCHAR(20),
+  -> name VARCHAR(20) not null,
+  -> sns_type VARCHAR(20),
+  -> member_id  INT not null
+);
+
+-- 선수 테이블
+CREATE TABLE TB_MEMBER(
+  -> member_id  INT primary key,  -- 선수 ID
+  -> name VARCHAR(20) not null,   -- 선수 이름
+  -> team_id  INT,                -- 선수 소속팀
+  FOREIGN KEY(member_id) REFERENCES TB_BASKETBALL_MATCH(member_id) ON UPDATE CASCADE ON DELETE CASCADE
+  FOREIGN KEY(member_id) REFERENCES TB_JOIN(member_id) ON UPDATE CASCADE ON DELETE CASCADE
+  FOREIGN KEY(member_id) REFERENCES TB_USER_LOG(member_id) ON UPDATE CASCADE ON DELETE CASCADE
+  -- 추가적으로 다른 경기 데이터 테이블 생성시 FOREIGN KEY 추가 필요
+);
+
+-- 팀 테이블
+CREATE TABLE TB_TEAM(
+  -> team_id  INT primary key,    -- 팀 ID
+  -> name VARCHAR(20) not null,   -- 팀 이름
+  -> region VARCHAR(20) not null, -- 팀 활동지역
+  FOREIGN KEY(team_id) REFERENCES TB_MEMBER(team_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- 농구 경기 데이터 테이블
+CREATE TABLE TB_BASKETBALL_MATCH(
+  -> member_id  INT,              -- 선수 ID
+  -> point1  INT,                 -- 1점슛
+  -> point1_try  INT,             -- 1점슛 시도
+  -> point2  INT,                 -- 2점슛
+  -> point2_try  INT,             -- 2점슛 시도
+  -> point3  INT,                 -- 3점슛
+  -> point3_try  INT,             -- 3점슛 시도
+  -> member_foul  INT,            -- 개인 파울
+  -> freethrow  INT,              -- 자유투
+  -> rebound  INT,                -- 리바운드
+  -> steal  INT,                  -- 스틸
+  -> assist  INT,                 -- 어시스트
+  -> block  INT,                  -- 블록
+  -> showtime TIMESTAMP           -- 출전시간
+);
+
+-- 사용자 접속 로그 테이블
+CREATE TABLE TB_USER_LOG(
+  -> id VARCHAR(50),              -- 사용자 ID
+  -> user_agent VARCHAR(100),     -- 사용자 접속정보
+  -> macaddress VARCHAR(30),      -- 사용자 MACADDRESS
+  -> ip VARCHAR(30),              -- 사용자 IP
+  -> access_time  TIMESTAMP       -- 사용자 접속시각
+);
+
+-- 볼링 경기 데이터 테이블
+CREATE TABLE TB_BOWLING_MATCH(
+);
+
+-- 야구 경기 데이터 테이블
+CREATE TABLE TB_BASEBALL_MATCH(
+);
